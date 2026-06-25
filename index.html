@@ -13,6 +13,7 @@
     --paper: #f7f5f0;
     --ink: #1b1f24;
     --line: #d9d4c6;
+    --danger: #b3261e;
   }
 
   *{ box-sizing: border-box; }
@@ -75,67 +76,124 @@
   .panel{ display:none; }
   .panel.active{ display:block; }
 
-  /* ===== 템플릿 탭 ===== */
-  .template-card{
+  /* ===== 공통 카드 ===== */
+  .card{
     background:#fff;
     border: 1px solid var(--line);
     border-radius: 8px;
-    padding: 28px 26px;
+    padding: 26px;
     margin-bottom: 18px;
   }
-  .template-card h2{
-    margin: 0 0 8px;
-    font-size: 1.15rem;
+
+  /* ===== 입력 폼 ===== */
+  .form-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field.full{ grid-column: 1 / -1; }
+  .field label{
+    font-size: 0.82rem;
+    font-weight: 600;
     color: var(--navy);
   }
-  .template-card p{
-    margin: 0 0 20px;
-    font-size: 0.92rem;
-    color: #5a5f66;
-    line-height: 1.6;
+  .field input[type="text"],
+  .field select{
+    padding: 11px 12px;
+    font-size: 0.95rem;
+    border: 1.5px solid var(--line);
+    border-radius: 6px;
+    outline: none;
+    background:#fff;
+    font-family: inherit;
   }
+  .field input[type="text"]:focus,
+  .field select:focus{
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(15,42,74,0.10);
+  }
+
+  .section-title{
+    margin: 26px 0 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--navy);
+    border-bottom: 2px solid var(--gold-soft);
+    padding-bottom: 6px;
+  }
+
+  .item-row{
+    display:flex;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .item-row input[type="text"]{
+    flex:1;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    border: 1.5px solid var(--line);
+    border-radius: 6px;
+    font-family: inherit;
+  }
+  .item-row .remove-btn{
+    flex-shrink:0;
+    width: 36px;
+    border: 1.5px solid var(--line);
+    background: #fff;
+    color: var(--danger);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .item-row .remove-btn:hover{ background:#fbeceb; }
+
+  .add-item-btn{
+    background: none;
+    border: 1.5px dashed var(--navy);
+    color: var(--navy);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .add-item-btn:hover{ background: var(--gold-soft); }
+
   .btn-row{
     display:flex;
     gap: 12px;
     flex-wrap: wrap;
+    margin-top: 26px;
   }
   .btn{
     display:inline-flex;
     align-items:center;
     gap: 8px;
-    padding: 13px 20px;
-    font-size: 0.92rem;
-    font-weight: 600;
+    padding: 13px 22px;
+    font-size: 0.95rem;
+    font-weight: 700;
     border-radius: 6px;
     text-decoration: none;
     cursor: pointer;
     border: none;
     transition: all .15s ease;
+    font-family: inherit;
   }
-  .btn-primary{
-    background: var(--navy);
-    color: #fff;
-  }
+  .btn-primary{ background: var(--navy); color: #fff; }
   .btn-primary:hover{ background: var(--navy-deep); }
-  .btn-secondary{
-    background: #fff;
-    color: var(--navy);
-    border: 2px solid var(--navy);
-  }
-  .btn-secondary:hover{ background: var(--gold-soft); }
+  .btn-primary:disabled{ opacity:.6; cursor:default; }
 
-  .steps{
-    margin: 22px 0 0;
-    padding-top: 18px;
-    border-top: 1px solid var(--line);
-  }
-  .steps ol{
-    margin: 10px 0 0;
-    padding-left: 20px;
+  .save-status{
+    margin-top: 14px;
     font-size: 0.88rem;
-    color: #5a5f66;
-    line-height: 1.8;
+    padding: 12px 14px;
+    border-radius: 6px;
   }
+  .save-status.ok{ background:#e7f3ea; color:#1e6b34; }
+  .save-status.err{ background:#fbeceb; color: var(--danger); }
+  .save-status a{ color: inherit; font-weight:700; text-decoration: underline; }
 
   /* ===== 검색 탭 ===== */
   .search-box{
@@ -151,6 +209,7 @@
     border-radius: 6px;
     outline: none;
     background:#fff;
+    font-family: inherit;
   }
   .search-box input[type="text"]:focus{
     border-color: var(--gold);
@@ -191,7 +250,7 @@
     font-weight: 600;
   }
 
-  .card{
+  .result-card{
     background:#fff;
     border: 1px solid var(--line);
     border-left: 5px solid var(--navy);
@@ -209,15 +268,8 @@
     border-bottom: 1px solid var(--line);
     padding-bottom: 10px;
   }
-  .card-title{
-    font-weight: 700;
-    color: var(--navy);
-    font-size: 1.05rem;
-  }
-  .card-meta{
-    font-size: 0.82rem;
-    color:#6b6f76;
-  }
+  .card-title{ font-weight: 700; color: var(--navy); font-size: 1.05rem; }
+  .card-meta{ font-size: 0.82rem; color:#6b6f76; }
   .card-meta span{ margin-right: 10px; }
 
   .section-label{
@@ -244,10 +296,7 @@
     border-radius: 2px;
   }
 
-  .card-foot{
-    margin-top: 14px;
-    text-align: right;
-  }
+  .card-foot{ margin-top: 14px; text-align: right; }
   .card-foot a{
     display:inline-block;
     font-size: 0.85rem;
@@ -259,16 +308,9 @@
     border-radius: 5px;
     transition: all .15s ease;
   }
-  .card-foot a:hover{
-    background: var(--navy);
-    color: #fff;
-  }
+  .card-foot a:hover{ background: var(--navy); color: #fff; }
 
-  .empty{
-    text-align:center;
-    padding: 50px 10px;
-    color:#6b6f76;
-  }
+  .empty{ text-align:center; padding: 50px 10px; color:#6b6f76; }
   .empty .big{ font-size: 2rem; margin-bottom: 8px; }
 
   footer{
@@ -278,8 +320,9 @@
     padding: 20px 0 40px;
   }
 
-  @media (max-width: 480px){
+  @media (max-width: 560px){
     header h1{ font-size: 1.25rem; }
+    .form-grid{ grid-template-columns: 1fr; }
     .search-box{ flex-direction: column; }
     .search-box button{ width: 100%; }
     .btn-row{ flex-direction: column; }
@@ -293,43 +336,77 @@
   <h1>시카고언약장로교회 당회록</h1>
   <p class="subtitle">Chicago Covenant Presbyterian Church · Session Minutes</p>
   <div class="tabs">
-    <button class="tab-btn active" data-tab="template">📄 새 당회록 작성</button>
+    <button class="tab-btn active" data-tab="write">📝 새 당회록 작성</button>
     <button class="tab-btn" data-tab="search">🔍 당회록 검색</button>
   </div>
 </header>
 
 <main>
 
-  <!-- ============ 템플릿 탭 ============ -->
-  <section id="panel-template" class="panel active">
-    <div class="template-card">
-      <h2>당회록 양식 다운로드</h2>
-      <p>
-        매월 정기(또는 임시) 당회 회의록 작성에 사용하는 공식 양식입니다.
-        다운로드한 파일을 열어 일시·장소·참석자·논의 사항·결의 사항을 채운 뒤,
-        완성된 파일을 구글 드라이브의 당회록 폴더에 올려주세요. 검색 시스템이
-        주기적으로 새 파일을 자동으로 찾아 색인합니다.
-      </p>
-      <div class="btn-row">
-        <a class="btn btn-primary" href="당회록_템플릿.docx" download>
-          ⬇ 템플릿 다운로드 (.docx)
-        </a>
-        <a class="btn btn-secondary" href="https://drive.google.com/drive/folders/1VvI1kb6PM91eza1EiU_KyMNl2WKGvOMT" target="_blank" rel="noopener">
-          📁 구글 드라이브 폴더 열기
-        </a>
+  <!-- ============ 작성 탭 ============ -->
+  <section id="panel-write" class="panel active">
+    <div class="card">
+      <div class="form-grid">
+        <div class="field">
+          <label>연도</label>
+          <input type="text" id="f-year" placeholder="2026">
+        </div>
+        <div class="field">
+          <label>월</label>
+          <input type="text" id="f-month" placeholder="4">
+        </div>
+
+        <div class="field full">
+          <label>일시</label>
+          <input type="text" id="f-datetime" placeholder="2026년 04월 11일 6:15 AM - 7:50 AM">
+        </div>
+
+        <div class="field">
+          <label>장소</label>
+          <input type="text" id="f-location" placeholder="회의실" value="회의실">
+        </div>
+        <div class="field">
+          <label>회의 종류</label>
+          <select id="f-meeting-type">
+            <option value="정기 당회">정기 당회</option>
+            <option value="임시 당회">임시 당회</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>기도자</label>
+          <input type="text" id="f-prayer" placeholder="예: 윤자명 장로">
+        </div>
+        <div class="field">
+          <label>참석자</label>
+          <input type="text" id="f-attendees" placeholder="예: 김윤민, 윤자명, 이윤종">
+        </div>
       </div>
 
-      <div class="steps">
-        <strong style="font-size:0.9rem; color:var(--navy);">작성 순서</strong>
-        <ol>
-          <li>위 "템플릿 다운로드" 버튼으로 양식을 받습니다.</li>
-          <li>일시 / 장소 / 회의 종류 / 기도자 / 참석자를 입력합니다.</li>
-          <li>논의 사항과 결의 사항을 작성합니다.</li>
-          <li>서기 · 당회장 이름을 적습니다.</li>
-          <li>"구글 드라이브 폴더 열기"로 이동하여, 해당 월/연도 폴더에 파일을 업로드합니다.</li>
-          <li>업로드한 당회록은 다음 자동 색인 시점부터 검색 탭에서 찾을 수 있습니다.</li>
-        </ol>
+      <div class="section-title">논의 사항</div>
+      <div id="discussion-list"></div>
+      <button type="button" class="add-item-btn" data-target="discussion-list">+ 논의 사항 추가</button>
+
+      <div class="section-title">결의 사항</div>
+      <div id="resolution-list"></div>
+      <button type="button" class="add-item-btn" data-target="resolution-list">+ 결의 사항 추가</button>
+
+      <div class="form-grid" style="margin-top:24px;">
+        <div class="field">
+          <label>서기</label>
+          <input type="text" id="f-secretary" placeholder="예: 윤자명 장로">
+        </div>
+        <div class="field">
+          <label>당회장</label>
+          <input type="text" id="f-moderator" placeholder="예: 김윤민 목사">
+        </div>
       </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="saveBtn">💾 당회록 저장</button>
+      </div>
+
+      <div id="saveStatus"></div>
     </div>
   </section>
 
@@ -351,43 +428,33 @@
 </footer>
 
 <script>
+  // ====================== 설정 ======================
+  // Apps Script 웹 앱 배포 후 나오는 URL을 여기에 붙여넣으세요.
+  const API_URL = 'PUT_APPS_SCRIPT_WEB_APP_URL_HERE';
+
   // ====================== 탭 전환 ======================
   const tabBtns = document.querySelectorAll('.tab-btn');
   const panels = {
-    template: document.getElementById('panel-template'),
+    write: document.getElementById('panel-write'),
     search: document.getElementById('panel-search')
   };
-
   tabBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       tabBtns.forEach(function (b) { b.classList.remove('active'); });
       btn.classList.add('active');
       Object.keys(panels).forEach(function (key) { panels[key].classList.remove('active'); });
       panels[btn.dataset.tab].classList.add('active');
-
-      if (btn.dataset.tab === 'search') {
-        document.getElementById('searchInput').focus();
-      }
+      if (btn.dataset.tab === 'search') document.getElementById('searchInput').focus();
     });
   });
 
-  // ====================== 검색 설정 ======================
-  // Apps Script 웹 앱 배포 후 나오는 URL을 여기에 붙여넣으세요.
-  // 예: https://script.google.com/macros/s/AKfycb.../exec
-  const API_URL = 'https://script.google.com/macros/s/AKfycbw1nXeagpzd16gBJJCBsD1RnfdwfCdO6j7BrcGPZys--Xu7spSdyn6w6tS0uvuffJPp/exec';
-
-  const input = document.getElementById('searchInput');
-  const btn = document.getElementById('searchBtn');
-  const output = document.getElementById('output');
-
+  // ====================== JSONP 헬퍼 ======================
   let jsonpCounter = 0;
-
   function jsonpRequest(url, params) {
     return new Promise(function (resolve, reject) {
       jsonpCounter += 1;
       const callbackName = 'ccpc_cb_' + Date.now() + '_' + jsonpCounter;
       const script = document.createElement('script');
-
       const query = Object.keys(params)
         .map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]); })
         .join('&');
@@ -397,13 +464,11 @@
         delete window[callbackName];
         script.remove();
       };
-
       script.onerror = function () {
-        reject(new Error('네트워크 오류로 검색에 실패했습니다.'));
+        reject(new Error('네트워크 오류가 발생했습니다.'));
         delete window[callbackName];
         script.remove();
       };
-
       script.src = url + (url.indexOf('?') === -1 ? '?' : '&') + query + '&callback=' + callbackName;
       document.body.appendChild(script);
     });
@@ -411,10 +476,98 @@
 
   function escapeHtml(str) {
     return String(str || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
+
+  function apiConfigured() {
+    return API_URL.indexOf('PUT_APPS_SCRIPT_WEB_APP_URL_HERE') === -1;
+  }
+
+  // ====================== 작성 폼: 동적 항목 추가/삭제 ======================
+  function addItemRow(containerId) {
+    const container = document.getElementById(containerId);
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    row.innerHTML =
+      '<input type="text" placeholder="내용을 입력하세요">' +
+      '<button type="button" class="remove-btn" title="삭제">✕</button>';
+    row.querySelector('.remove-btn').addEventListener('click', function () {
+      row.remove();
+    });
+    container.appendChild(row);
+    row.querySelector('input').focus();
+  }
+
+  document.querySelectorAll('.add-item-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { addItemRow(btn.dataset.target); });
+  });
+
+  // 시작 시 기본 1줄씩 추가
+  addItemRow('discussion-list');
+  addItemRow('resolution-list');
+
+  function collectItems(containerId) {
+    const container = document.getElementById(containerId);
+    const inputs = container.querySelectorAll('input[type="text"]');
+    const items = [];
+    inputs.forEach(function (inp) {
+      const v = inp.value.trim();
+      if (v) items.push(v);
+    });
+    return items;
+  }
+
+  // ====================== 저장 ======================
+  const saveBtn = document.getElementById('saveBtn');
+  const saveStatus = document.getElementById('saveStatus');
+
+  saveBtn.addEventListener('click', function () {
+    const payload = {
+      연도: document.getElementById('f-year').value.trim(),
+      월: document.getElementById('f-month').value.trim(),
+      일시: document.getElementById('f-datetime').value.trim(),
+      장소: document.getElementById('f-location').value.trim(),
+      회의종류: document.getElementById('f-meeting-type').value,
+      기도자: document.getElementById('f-prayer').value.trim(),
+      참석자: document.getElementById('f-attendees').value.trim(),
+      논의사항: collectItems('discussion-list'),
+      결의사항: collectItems('resolution-list'),
+      서기: document.getElementById('f-secretary').value.trim(),
+      당회장: document.getElementById('f-moderator').value.trim()
+    };
+
+    if (!payload.연도 || !payload.월 || !payload.일시) {
+      saveStatus.innerHTML = '<div class="save-status err">연도, 월, 일시는 반드시 입력해 주세요.</div>';
+      return;
+    }
+    if (!apiConfigured()) {
+      saveStatus.innerHTML = '<div class="save-status err">⚠️ API_URL이 아직 설정되지 않았습니다. index.html의 API_URL 값을 Apps Script 웹 앱 URL로 교체해 주세요.</div>';
+      return;
+    }
+
+    saveBtn.disabled = true;
+    saveStatus.innerHTML = '<div class="save-status">저장 중입니다… (양식에 맞는 문서를 생성하고 있습니다)</div>';
+
+    jsonpRequest(API_URL, { action: 'save', payload: JSON.stringify(payload) })
+      .then(function (data) {
+        if (data && data.ok) {
+          saveStatus.innerHTML =
+            '<div class="save-status ok">✅ 저장되었습니다. ' +
+            '<a href="' + escapeHtml(data.saved.url) + '" target="_blank" rel="noopener">생성된 문서 열기 →</a></div>';
+        } else {
+          saveStatus.innerHTML = '<div class="save-status err">저장 중 오류: ' + escapeHtml(data && data.error) + '</div>';
+        }
+      })
+      .catch(function (err) {
+        saveStatus.innerHTML = '<div class="save-status err">오류가 발생했습니다: ' + escapeHtml(err.message) + '</div>';
+      })
+      .finally(function () { saveBtn.disabled = false; });
+  });
+
+  // ====================== 검색 ======================
+  const input = document.getElementById('searchInput');
+  const btn = document.getElementById('searchBtn');
+  const output = document.getElementById('output');
 
   function highlight(text, keyword) {
     const escaped = escapeHtml(text);
@@ -437,7 +590,7 @@
 
     data.results.forEach(function (item) {
       const title = (item.연도 ? item.연도 + '년 ' : '') + (item.월 ? item.월 + '월 ' : '') + (item.회의종류 || '당회 회의록');
-      html += '<div class="card">';
+      html += '<div class="result-card">';
       html += '  <div class="card-head">';
       html += '    <div class="card-title">' + escapeHtml(title) + '</div>';
       html += '    <div class="card-meta">';
@@ -446,9 +599,7 @@
       html += '    </div>';
       html += '  </div>';
 
-      if (item.참석자) {
-        html += '  <div class="card-meta">참석자: ' + escapeHtml(item.참석자) + '</div>';
-      }
+      if (item.참석자) html += '  <div class="card-meta">참석자: ' + escapeHtml(item.참석자) + '</div>';
 
       if (item.논의사항 && item.논의사항.toLowerCase().indexOf(keyword.toLowerCase()) !== -1) {
         html += '  <div class="section-label">논의 사항</div>';
@@ -460,9 +611,7 @@
       }
 
       html += '  <div class="card-foot">';
-      if (item.원본링크) {
-        html += '<a href="' + escapeHtml(item.원본링크) + '" target="_blank" rel="noopener">원본 문서 보기 →</a>';
-      }
+      if (item.원본링크) html += '<a href="' + escapeHtml(item.원본링크) + '" target="_blank" rel="noopener">원본 문서 보기 →</a>';
       html += '  </div>';
       html += '</div>';
     });
@@ -476,15 +625,15 @@
       output.innerHTML = '<p class="status">검색어를 입력해 주세요.</p>';
       return;
     }
-    if (API_URL.indexOf('PUT_APPS_SCRIPT_WEB_APP_URL_HERE') !== -1) {
-      output.innerHTML = '<p class="status">⚠️ 아직 API_URL이 설정되지 않았습니다. index.html의 API_URL 값을 Apps Script 웹 앱 URL로 교체해 주세요.</p>';
+    if (!apiConfigured()) {
+      output.innerHTML = '<p class="status">⚠️ 아직 API_URL이 설정되지 않았습니다.</p>';
       return;
     }
 
     btn.disabled = true;
     output.innerHTML = '<p class="status">검색 중입니다…</p>';
 
-    jsonpRequest(API_URL, { q: keyword })
+    jsonpRequest(API_URL, { action: 'search', q: keyword })
       .then(function (data) { renderResults(data, keyword); })
       .catch(function (err) {
         output.innerHTML = '<p class="status">오류가 발생했습니다: ' + escapeHtml(err.message) + '</p>';
@@ -493,9 +642,7 @@
   }
 
   btn.addEventListener('click', runSearch);
-  input.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') runSearch();
-  });
+  input.addEventListener('keydown', function (e) { if (e.key === 'Enter') runSearch(); });
 </script>
 
 </body>
