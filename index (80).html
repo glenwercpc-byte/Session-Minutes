@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>당회록 | CCPC Session Minutes</title>
+<style>
+  :root{
+    --navy: #0f2a4a;
+    --navy-deep: #081a30;
+    --gold: #c9a227;
+    --gold-soft: #e8d8a0;
+    --paper: #f7f5f0;
+    --ink: #1b1f24;
+    --line: #d9d4c6;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  header{
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color: #fff;
+    padding: 36px 20px 0;
+    text-align: center;
+    border-bottom: 4px solid var(--gold);
+  }
+  header h1{
+    margin:0 0 6px;
+    font-size: 1.5rem;
+    letter-spacing: 0.02em;
+  }
+  header p.subtitle{
+    margin:0 0 22px;
+    color: var(--gold-soft);
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+  }
+
+  .tabs{
+    display:flex;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  .tab-btn{
+    flex:1;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 14px 10px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all .15s ease;
+    font-family: inherit;
+  }
+  .tab-btn:hover{ color: #fff; }
+  .tab-btn.active{
+    color: #fff;
+    border-bottom-color: var(--gold);
+  }
+
+  main{
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 28px 18px 60px;
+  }
+
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  /* ===== 템플릿 탭 ===== */
+  .template-card{
+    background:#fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 28px 26px;
+    margin-bottom: 18px;
+  }
+  .template-card h2{
+    margin: 0 0 8px;
+    font-size: 1.15rem;
+    color: var(--navy);
+  }
+  .template-card p{
+    margin: 0 0 20px;
+    font-size: 0.92rem;
+    color: #5a5f66;
+    line-height: 1.6;
+  }
+  .btn-row{
+    display:flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    padding: 13px 20px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all .15s ease;
+  }
+  .btn-primary{
+    background: var(--navy);
+    color: #fff;
+  }
+  .btn-primary:hover{ background: var(--navy-deep); }
+  .btn-secondary{
+    background: #fff;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+  }
+  .btn-secondary:hover{ background: var(--gold-soft); }
+
+  .steps{
+    margin: 22px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .steps ol{
+    margin: 10px 0 0;
+    padding-left: 20px;
+    font-size: 0.88rem;
+    color: #5a5f66;
+    line-height: 1.8;
+  }
+
+  /* ===== 검색 탭 ===== */
+  .search-box{
+    display:flex;
+    gap:10px;
+    margin-bottom: 6px;
+  }
+  .search-box input[type="text"]{
+    flex:1;
+    padding: 14px 16px;
+    font-size: 1rem;
+    border: 2px solid var(--navy);
+    border-radius: 6px;
+    outline: none;
+    background:#fff;
+  }
+  .search-box input[type="text"]:focus{
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,162,39,0.18);
+  }
+  .search-box button{
+    padding: 14px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    color:#fff;
+    background: var(--navy);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .15s ease;
+    font-family: inherit;
+  }
+  .search-box button:hover{ background: var(--navy-deep); }
+  .search-box button:disabled{ opacity:.6; cursor: default; }
+
+  .hint{
+    font-size: 0.8rem;
+    color:#6b6f76;
+    margin: 0 0 28px 2px;
+  }
+
+  .status{
+    text-align:center;
+    color:#6b6f76;
+    padding: 30px 0;
+    font-size: 0.95rem;
+  }
+
+  .result-count{
+    margin: 0 0 16px 2px;
+    font-size: 0.9rem;
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  .card{
+    background:#fff;
+    border: 1px solid var(--line);
+    border-left: 5px solid var(--navy);
+    border-radius: 6px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .card-head{
+    display:flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 10px;
+  }
+  .card-title{
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 1.05rem;
+  }
+  .card-meta{
+    font-size: 0.82rem;
+    color:#6b6f76;
+  }
+  .card-meta span{ margin-right: 10px; }
+
+  .section-label{
+    display:inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--navy);
+    background: var(--gold-soft);
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin: 10px 0 6px;
+  }
+  .snippet{
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--ink);
+    white-space: pre-wrap;
+  }
+  .snippet mark{
+    background: var(--gold-soft);
+    color: var(--navy-deep);
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+
+  .card-foot{
+    margin-top: 14px;
+    text-align: right;
+  }
+  .card-foot a{
+    display:inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--navy);
+    text-decoration: none;
+    border: 1px solid var(--navy);
+    padding: 7px 14px;
+    border-radius: 5px;
+    transition: all .15s ease;
+  }
+  .card-foot a:hover{
+    background: var(--navy);
+    color: #fff;
+  }
+
+  .empty{
+    text-align:center;
+    padding: 50px 10px;
+    color:#6b6f76;
+  }
+  .empty .big{ font-size: 2rem; margin-bottom: 8px; }
+
+  footer{
+    text-align:center;
+    font-size: 0.78rem;
+    color:#9a9a9a;
+    padding: 20px 0 40px;
+  }
+
+  @media (max-width: 480px){
+    header h1{ font-size: 1.25rem; }
+    .search-box{ flex-direction: column; }
+    .search-box button{ width: 100%; }
+    .btn-row{ flex-direction: column; }
+    .btn{ justify-content:center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>시카고언약장로교회 당회록</h1>
+  <p class="subtitle">Chicago Covenant Presbyterian Church · Session Minutes</p>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="template">📄 새 당회록 작성</button>
+    <button class="tab-btn" data-tab="search">🔍 당회록 검색</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ 템플릿 탭 ============ -->
+  <section id="panel-template" class="panel active">
+    <div class="template-card">
+      <h2>당회록 양식 다운로드</h2>
+      <p>
+        매월 정기(또는 임시) 당회 회의록 작성에 사용하는 공식 양식입니다.
+        다운로드한 파일을 열어 일시·장소·참석자·논의 사항·결의 사항을 채운 뒤,
+        완성된 파일을 구글 드라이브의 당회록 폴더에 올려주세요. 검색 시스템이
+        주기적으로 새 파일을 자동으로 찾아 색인합니다.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="당회록_템플릿.docx" download>
+          ⬇ 템플릿 다운로드 (.docx)
+        </a>
+        <a class="btn btn-secondary" href="https://drive.google.com/drive/folders/1VvI1kb6PM91eza1EiU_KyMNl2WKGvOMT" target="_blank" rel="noopener">
+          📁 구글 드라이브 폴더 열기
+        </a>
+      </div>
+
+      <div class="steps">
+        <strong style="font-size:0.9rem; color:var(--navy);">작성 순서</strong>
+        <ol>
+          <li>위 "템플릿 다운로드" 버튼으로 양식을 받습니다.</li>
+          <li>일시 / 장소 / 회의 종류 / 기도자 / 참석자를 입력합니다.</li>
+          <li>논의 사항과 결의 사항을 작성합니다.</li>
+          <li>서기 · 당회장 이름을 적습니다.</li>
+          <li>"구글 드라이브 폴더 열기"로 이동하여, 해당 월/연도 폴더에 파일을 업로드합니다.</li>
+          <li>업로드한 당회록은 다음 자동 색인 시점부터 검색 탭에서 찾을 수 있습니다.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 검색 탭 ============ -->
+  <section id="panel-search" class="panel">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="검색어 입력 (예: 비빔밥, CDARS, 선교회 …)" autocomplete="off">
+      <button id="searchBtn">검색 Search</button>
+    </div>
+    <p class="hint">논의 사항 / 결의 사항 본문 내용을 기준으로 검색합니다. (Searches the content of 논의 사항 and 결의 사항 sections.)</p>
+
+    <div id="output"></div>
+  </section>
+
+</main>
+
+<footer>
+  Chicago Covenant Presbyterian Church &middot; chicagocovenant.org
+</footer>
+
+<script>
+  // ====================== 탭 전환 ======================
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const panels = {
+    template: document.getElementById('panel-template'),
+    search: document.getElementById('panel-search')
+  };
+
+  tabBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      tabBtns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      Object.keys(panels).forEach(function (key) { panels[key].classList.remove('active'); });
+      panels[btn.dataset.tab].classList.add('active');
+
+      if (btn.dataset.tab === 'search') {
+        document.getElementById('searchInput').focus();
+      }
+    });
+  });
+
+  // ====================== 검색 설정 ======================
+  // Apps Script 웹 앱 배포 후 나오는 URL을 여기에 붙여넣으세요.
+  // 예: https://script.google.com/macros/s/AKfycb.../exec
+  const API_URL = 'PUT_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+  const input = document.getElementById('searchInput');
+  const btn = document.getElementById('searchBtn');
+  const output = document.getElementById('output');
+
+  let jsonpCounter = 0;
+
+  function jsonpRequest(url, params) {
+    return new Promise(function (resolve, reject) {
+      jsonpCounter += 1;
+      const callbackName = 'ccpc_cb_' + Date.now() + '_' + jsonpCounter;
+      const script = document.createElement('script');
+
+      const query = Object.keys(params)
+        .map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]); })
+        .join('&');
+
+      window[callbackName] = function (data) {
+        resolve(data);
+        delete window[callbackName];
+        script.remove();
+      };
+
+      script.onerror = function () {
+        reject(new Error('네트워크 오류로 검색에 실패했습니다.'));
+        delete window[callbackName];
+        script.remove();
+      };
+
+      script.src = url + (url.indexOf('?') === -1 ? '?' : '&') + query + '&callback=' + callbackName;
+      document.body.appendChild(script);
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function highlight(text, keyword) {
+    const escaped = escapeHtml(text);
+    if (!keyword) return escaped;
+    const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp('(' + safeKeyword + ')', 'gi');
+    return escaped.replace(re, '<mark>$1</mark>');
+  }
+
+  function renderResults(data, keyword) {
+    if (!data || !data.results || data.results.length === 0) {
+      output.innerHTML =
+        '<div class="empty"><div class="big">🔍</div>' +
+        '검색 결과가 없습니다.<br>다른 검색어로 다시 시도해 보세요.<br>' +
+        '<span style="font-size:0.8rem">No matching session minutes found.</span></div>';
+      return;
+    }
+
+    let html = '<p class="result-count">총 ' + data.results.length + '건의 당회록을 찾았습니다.</p>';
+
+    data.results.forEach(function (item) {
+      const title = (item.연도 ? item.연도 + '년 ' : '') + (item.월 ? item.월 + '월 ' : '') + (item.회의종류 || '당회 회의록');
+      html += '<div class="card">';
+      html += '  <div class="card-head">';
+      html += '    <div class="card-title">' + escapeHtml(title) + '</div>';
+      html += '    <div class="card-meta">';
+      if (item.일시) html += '<span>📅 ' + escapeHtml(item.일시) + '</span>';
+      if (item.장소) html += '<span>📍 ' + escapeHtml(item.장소) + '</span>';
+      html += '    </div>';
+      html += '  </div>';
+
+      if (item.참석자) {
+        html += '  <div class="card-meta">참석자: ' + escapeHtml(item.참석자) + '</div>';
+      }
+
+      if (item.논의사항 && item.논의사항.toLowerCase().indexOf(keyword.toLowerCase()) !== -1) {
+        html += '  <div class="section-label">논의 사항</div>';
+        html += '  <div class="snippet">' + highlight(item.논의사항, keyword) + '</div>';
+      }
+      if (item.결의사항 && item.결의사항.toLowerCase().indexOf(keyword.toLowerCase()) !== -1) {
+        html += '  <div class="section-label">결의 사항</div>';
+        html += '  <div class="snippet">' + highlight(item.결의사항, keyword) + '</div>';
+      }
+
+      html += '  <div class="card-foot">';
+      if (item.원본링크) {
+        html += '<a href="' + escapeHtml(item.원본링크) + '" target="_blank" rel="noopener">원본 문서 보기 →</a>';
+      }
+      html += '  </div>';
+      html += '</div>';
+    });
+
+    output.innerHTML = html;
+  }
+
+  function runSearch() {
+    const keyword = input.value.trim();
+    if (!keyword) {
+      output.innerHTML = '<p class="status">검색어를 입력해 주세요.</p>';
+      return;
+    }
+    if (API_URL.indexOf('PUT_APPS_SCRIPT_WEB_APP_URL_HERE') !== -1) {
+      output.innerHTML = '<p class="status">⚠️ 아직 API_URL이 설정되지 않았습니다. index.html의 API_URL 값을 Apps Script 웹 앱 URL로 교체해 주세요.</p>';
+      return;
+    }
+
+    btn.disabled = true;
+    output.innerHTML = '<p class="status">검색 중입니다…</p>';
+
+    jsonpRequest(API_URL, { q: keyword })
+      .then(function (data) { renderResults(data, keyword); })
+      .catch(function (err) {
+        output.innerHTML = '<p class="status">오류가 발생했습니다: ' + escapeHtml(err.message) + '</p>';
+      })
+      .finally(function () { btn.disabled = false; });
+  }
+
+  btn.addEventListener('click', runSearch);
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') runSearch();
+  });
+</script>
+
+</body>
+</html>
