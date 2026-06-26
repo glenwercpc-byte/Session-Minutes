@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>당회록 | CCPC Session Minutes</title>
+<title>문서 검색 | CCPC Document Search</title>
 <style>
   :root{
     --navy: #0f2a4a;
@@ -13,7 +13,6 @@
     --paper: #f7f5f0;
     --ink: #1b1f24;
     --line: #d9d4c6;
-    --danger: #b3261e;
   }
 
   *{ box-sizing: border-box; }
@@ -27,7 +26,7 @@
   header{
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
     color: #fff;
-    padding: 36px 20px 0;
+    padding: 36px 20px 30px;
     text-align: center;
     border-bottom: 4px solid var(--gold);
   }
@@ -36,35 +35,11 @@
     font-size: 1.5rem;
     letter-spacing: 0.02em;
   }
-  header p.subtitle{
-    margin:0 0 22px;
+  header p{
+    margin:0;
     color: var(--gold-soft);
     font-size: 0.85rem;
     letter-spacing: 0.03em;
-  }
-
-  .tabs{
-    display:flex;
-    max-width: 880px;
-    margin: 0 auto;
-  }
-  .tab-btn{
-    flex:1;
-    background: transparent;
-    border: none;
-    color: rgba(255,255,255,0.65);
-    font-size: 0.95rem;
-    font-weight: 600;
-    padding: 14px 10px;
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    transition: all .15s ease;
-    font-family: inherit;
-  }
-  .tab-btn:hover{ color: #fff; }
-  .tab-btn.active{
-    color: #fff;
-    border-bottom-color: var(--gold);
   }
 
   main{
@@ -73,121 +48,6 @@
     padding: 28px 18px 60px;
   }
 
-  .panel{ display:none; }
-  .panel.active{ display:block; }
-
-  /* ===== 공통 카드 ===== */
-  .card{
-    background:#fff;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 26px;
-    margin-bottom: 18px;
-  }
-
-  /* ===== 입력 폼 ===== */
-  .form-grid{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .field{ display:flex; flex-direction:column; gap:6px; }
-  .field.full{ grid-column: 1 / -1; }
-  .field label{
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--navy);
-  }
-  .field input[type="text"],
-  .field select{
-    padding: 11px 12px;
-    font-size: 0.95rem;
-    border: 1.5px solid var(--line);
-    border-radius: 6px;
-    outline: none;
-    background:#fff;
-    font-family: inherit;
-    width: 100%;
-  }
-  .field input[type="text"]:focus,
-  .field select:focus{
-    border-color: var(--navy);
-    box-shadow: 0 0 0 3px rgba(15,42,74,0.10);
-  }
-
-  /* 연도/월/일시, 장소/회의종류/기도자/참석자: 앞쪽 칸들은 좁게, 마지막 칸이 나머지를 채움 */
-  .form-row{
-    display:grid;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  .form-row.row-6{ grid-template-columns: 1fr 1fr 1fr 2fr 1.5fr 1.5fr; }
-  .form-row.row-pa{ grid-template-columns: 1fr 3fr; }
-
-  .section-title{
-    margin: 26px 0 10px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--navy);
-    border-bottom: 2px solid var(--gold-soft);
-    padding-bottom: 6px;
-  }
-
-  .auto-textarea{
-    display:block;
-    width: 100%;
-    resize: none;
-    overflow: hidden;
-    padding: 11px 12px;
-    font-size: 0.92rem;
-    line-height: 1.6;
-    border: 1.5px solid var(--line);
-    border-radius: 6px;
-    outline: none;
-    background:#fff;
-    font-family: inherit;
-    min-height: 44px;
-  }
-  .auto-textarea:focus{
-    border-color: var(--navy);
-    box-shadow: 0 0 0 3px rgba(15,42,74,0.10);
-  }
-
-  .btn-row{
-    display:flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 26px;
-  }
-  .btn{
-    display:inline-flex;
-    align-items:center;
-    gap: 8px;
-    padding: 13px 22px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    border-radius: 6px;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    transition: all .15s ease;
-    font-family: inherit;
-  }
-  .btn-primary{ background: var(--navy); color: #fff; }
-  .btn-primary:hover{ background: var(--navy-deep); }
-  .btn-primary:disabled{ opacity:.6; cursor:default; }
-
-  .save-status{
-    margin-top: 14px;
-    font-size: 0.88rem;
-    padding: 12px 14px;
-    border-radius: 6px;
-  }
-  .save-status.ok{ background:#e7f3ea; color:#1e6b34; }
-  .save-status.err{ background:#fbeceb; color: var(--danger); }
-  .save-status a{ color: inherit; font-weight:700; text-decoration: underline; }
-
-  /* ===== 검색 탭 ===== */
   .search-box{
     display:flex;
     gap:10px;
@@ -264,22 +124,12 @@
   .card-meta{ font-size: 0.82rem; color:#6b6f76; }
   .card-meta span{ margin-right: 10px; }
 
-  .section-label{
-    display:inline-block;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: var(--navy);
-    background: var(--gold-soft);
-    padding: 2px 8px;
-    border-radius: 3px;
-    margin: 10px 0 6px;
-  }
   .snippet{
     font-size: 0.92rem;
-    line-height: 1.55;
+    line-height: 1.6;
     color: var(--ink);
     white-space: pre-wrap;
+    margin-top: 6px;
   }
   .snippet mark{
     background: var(--gold-soft);
@@ -312,126 +162,28 @@
     padding: 20px 0 40px;
   }
 
-  @media (max-width: 560px){
+  @media (max-width: 480px){
     header h1{ font-size: 1.25rem; }
-    .form-grid{ grid-template-columns: 1fr; }
-    .form-row.row-6{ grid-template-columns: 1fr 1fr; }
-    .form-row.row-6 .field:nth-child(5),
-    .form-row.row-6 .field:nth-child(6){ grid-column: span 1; }
-    .form-row.row-pa{ grid-template-columns: 1fr; }
     .search-box{ flex-direction: column; }
     .search-box button{ width: 100%; }
-    .btn-row{ flex-direction: column; }
-    .btn{ justify-content:center; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>시카고언약장로교회 당회록</h1>
-  <p class="subtitle">Chicago Covenant Presbyterian Church · Session Minutes</p>
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="write">📝 새 당회록 작성</button>
-    <button class="tab-btn" data-tab="search">🔍 당회록 검색</button>
-  </div>
+  <h1>시카고언약장로교회 문서 검색</h1>
+  <p>Chicago Covenant Presbyterian Church · Document Search</p>
 </header>
 
 <main>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="검색어 입력 (예: 비빔밥, CDARS, 선교회 …)" autocomplete="off">
+    <button id="searchBtn">검색 Search</button>
+  </div>
+  <p class="hint">폴더 안의 모든 문서에서 제목과 본문 내용을 검색합니다. (Searches the title and full text of every document in the folder.)</p>
 
-  <!-- ============ 작성 탭 ============ -->
-  <section id="panel-write" class="panel active">
-    <div class="card">
-      <div class="form-row row-6">
-        <div class="field">
-          <label>Year</label>
-          <input type="text" id="f-year" placeholder="2026">
-        </div>
-        <div class="field">
-          <label>Month</label>
-          <input type="text" id="f-month" placeholder="4">
-        </div>
-        <div class="field">
-          <label>Day</label>
-          <input type="text" id="f-day" placeholder="11">
-        </div>
-        <div class="field">
-          <label>Meeting Time</label>
-          <input type="text" id="f-meeting-time" placeholder="6:15 AM - 7:50 AM">
-        </div>
-        <div class="field">
-          <label>장소</label>
-          <input type="text" id="f-location" placeholder="회의실" value="회의실">
-        </div>
-        <div class="field">
-          <label>회의 종류</label>
-          <select id="f-meeting-type">
-            <option value="정기 당회">정기 당회</option>
-            <option value="임시 당회">임시 당회</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-row row-pa">
-        <div class="field">
-          <label>기도자</label>
-          <input type="text" id="f-prayer" placeholder="예: 윤자명 장로">
-        </div>
-        <div class="field">
-          <label>참석자</label>
-          <input type="text" id="f-attendees" placeholder="예: 김윤민, 윤자명, 이윤종">
-        </div>
-      </div>
-
-      <div class="form-row row-pa">
-        <div class="field">
-          <label>이전 당회록</label>
-          <input type="text" id="f-prior-minutes" placeholder="2026년 3월 당회록.">
-        </div>
-        <div class="field">
-          <label>이전 재정보고</label>
-          <input type="text" id="f-prior-finance" placeholder="2026년 3월 재정보고">
-        </div>
-      </div>
-
-      <div class="section-title">논의 사항</div>
-      <textarea class="auto-textarea" id="discussion-text" rows="1"
-        placeholder="한 줄에 한 항목씩 입력하세요. Enter를 누르면 다음 항목으로 줄이 늘어납니다."></textarea>
-
-      <div class="section-title">결의 사항</div>
-      <textarea class="auto-textarea" id="resolution-text" rows="1"
-        placeholder="한 줄에 한 항목씩 입력하세요. Enter를 누르면 다음 항목으로 줄이 늘어납니다."></textarea>
-
-      <div class="form-grid" style="margin-top:24px;">
-        <div class="field">
-          <label>서기</label>
-          <input type="text" id="f-secretary" placeholder="예: 윤자명 장로">
-        </div>
-        <div class="field">
-          <label>당회장</label>
-          <input type="text" id="f-moderator" placeholder="예: 김윤민 목사">
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-primary" id="saveBtn">💾 당회록 저장</button>
-      </div>
-
-      <div id="saveStatus"></div>
-    </div>
-  </section>
-
-  <!-- ============ 검색 탭 ============ -->
-  <section id="panel-search" class="panel">
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="검색어 입력 (예: 비빔밥, CDARS, 선교회 …)" autocomplete="off">
-      <button id="searchBtn">검색 Search</button>
-    </div>
-    <p class="hint">논의 사항 / 결의 사항 본문 내용을 기준으로 검색합니다. (Searches the content of 논의 사항 and 결의 사항 sections.)</p>
-
-    <div id="output"></div>
-  </section>
-
+  <div id="output"></div>
 </main>
 
 <footer>
@@ -440,32 +192,20 @@
 
 <script>
   // ====================== 설정 ======================
-  // Apps Script 웹 앱 배포 후 나오는 URL을 여기에 붙여넣으세요.
   const API_URL = 'https://script.google.com/macros/s/AKfycbw1nXeagpzd16gBJJCBsD1RnfdwfCdO6j7BrcGPZys--Xu7spSdyn6w6tS0uvuffJPp/exec';
 
-  // ====================== 탭 전환 ======================
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  const panels = {
-    write: document.getElementById('panel-write'),
-    search: document.getElementById('panel-search')
-  };
-  tabBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      tabBtns.forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      Object.keys(panels).forEach(function (key) { panels[key].classList.remove('active'); });
-      panels[btn.dataset.tab].classList.add('active');
-      if (btn.dataset.tab === 'search') document.getElementById('searchInput').focus();
-    });
-  });
+  const input = document.getElementById('searchInput');
+  const btn = document.getElementById('searchBtn');
+  const output = document.getElementById('output');
 
-  // ====================== JSONP 헬퍼 ======================
   let jsonpCounter = 0;
+
   function jsonpRequest(url, params) {
     return new Promise(function (resolve, reject) {
       jsonpCounter += 1;
       const callbackName = 'ccpc_cb_' + Date.now() + '_' + jsonpCounter;
       const script = document.createElement('script');
+
       const query = Object.keys(params)
         .map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]); })
         .join('&');
@@ -475,11 +215,13 @@
         delete window[callbackName];
         script.remove();
       };
+
       script.onerror = function () {
-        reject(new Error('네트워크 오류가 발생했습니다.'));
+        reject(new Error('네트워크 오류로 검색에 실패했습니다.'));
         delete window[callbackName];
         script.remove();
       };
+
       script.src = url + (url.indexOf('?') === -1 ? '?' : '&') + query + '&callback=' + callbackName;
       document.body.appendChild(script);
     });
@@ -487,108 +229,10 @@
 
   function escapeHtml(str) {
     return String(str || '')
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   }
-
-  function apiConfigured() {
-    return API_URL.indexOf('PUT_APPS_SCRIPT_WEB_APP_URL_HERE') === -1;
-  }
-
-  // ====================== 작성 폼: 기본값 채우기 ======================
-  // Year/Month/Day는 오늘 날짜로, Meeting Time은 기본 시간으로 미리 채워두고
-  // 필요하면 나중에 직접 수정할 수 있게 한다.
-  (function fillDefaultDate() {
-    const today = new Date();
-    document.getElementById('f-year').value = today.getFullYear();
-    document.getElementById('f-month').value = (today.getMonth() + 1);
-    document.getElementById('f-day').value = today.getDate();
-    document.getElementById('f-meeting-time').value = '6:15 AM - 8:30 AM';
-  })();
-
-  // ====================== 작성 폼: 자동 확장 입력창 ======================
-  function autoResize(textarea) {
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px';
-  }
-
-  const autoTextareas = document.querySelectorAll('.auto-textarea');
-  autoTextareas.forEach(function (ta) {
-    autoResize(ta);
-    ta.addEventListener('input', function () { autoResize(ta); });
-  });
-
-  function collectLines(textareaId) {
-    const value = document.getElementById(textareaId).value;
-    return value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
-  }
-
-  // ====================== 저장 ======================
-  const saveBtn = document.getElementById('saveBtn');
-  const saveStatus = document.getElementById('saveStatus');
-
-  saveBtn.addEventListener('click', function () {
-    const year = document.getElementById('f-year').value.trim();
-    const month = document.getElementById('f-month').value.trim();
-    const day = document.getElementById('f-day').value.trim();
-    const meetingTime = document.getElementById('f-meeting-time').value.trim();
-
-    // Year/Month/Day/Meeting Time을 하나의 일시 문자열로 결합
-    // 예: 2026년 04월 11일 6:15 AM - 7:50 AM
-    let datetime = '';
-    if (year) datetime += year + '년 ';
-    if (month) datetime += month + '월 ';
-    if (day) datetime += day + '일 ';
-    datetime += meetingTime;
-    datetime = datetime.trim();
-
-    const payload = {
-      연도: year,
-      월: month,
-      일시: datetime,
-      장소: document.getElementById('f-location').value.trim(),
-      회의종류: document.getElementById('f-meeting-type').value,
-      기도자: document.getElementById('f-prayer').value.trim(),
-      참석자: document.getElementById('f-attendees').value.trim(),
-      이전당회록: document.getElementById('f-prior-minutes').value.trim(),
-      이전재정보고: document.getElementById('f-prior-finance').value.trim(),
-      논의사항: collectLines('discussion-text'),
-      결의사항: collectLines('resolution-text'),
-      서기: document.getElementById('f-secretary').value.trim(),
-      당회장: document.getElementById('f-moderator').value.trim()
-    };
-
-    if (!year || !month || !day) {
-      saveStatus.innerHTML = '<div class="save-status err">Year, Month, Day는 반드시 입력해 주세요.</div>';
-      return;
-    }
-    if (!apiConfigured()) {
-      saveStatus.innerHTML = '<div class="save-status err">⚠️ API_URL이 아직 설정되지 않았습니다. index.html의 API_URL 값을 Apps Script 웹 앱 URL로 교체해 주세요.</div>';
-      return;
-    }
-
-    saveBtn.disabled = true;
-    saveStatus.innerHTML = '<div class="save-status">저장 중입니다… (양식에 맞는 문서를 생성하고 있습니다)</div>';
-
-    jsonpRequest(API_URL, { action: 'save', payload: JSON.stringify(payload) })
-      .then(function (data) {
-        if (data && data.ok) {
-          saveStatus.innerHTML =
-            '<div class="save-status ok">✅ 저장되었습니다. ' +
-            '<a href="' + escapeHtml(data.saved.url) + '" target="_blank" rel="noopener">생성된 문서 열기 →</a></div>';
-        } else {
-          saveStatus.innerHTML = '<div class="save-status err">저장 중 오류: ' + escapeHtml(data && data.error) + '</div>';
-        }
-      })
-      .catch(function (err) {
-        saveStatus.innerHTML = '<div class="save-status err">오류가 발생했습니다: ' + escapeHtml(err.message) + '</div>';
-      })
-      .finally(function () { saveBtn.disabled = false; });
-  });
-
-  // ====================== 검색 ======================
-  const input = document.getElementById('searchInput');
-  const btn = document.getElementById('searchBtn');
-  const output = document.getElementById('output');
 
   function highlight(text, keyword) {
     const escaped = escapeHtml(text);
@@ -598,30 +242,19 @@
     return escaped.replace(re, '<mark>$1</mark>');
   }
 
-  // 저장된 내용은 항목별로 줄바꿈만 되어 있고 번호가 없으므로,
-  // 화면에 보여줄 때 줄마다 "1. ", "2. " 번호를 붙여서 표시한다.
-  function numberLines(text) {
-    return String(text || '')
-      .split('\n')
-      .map(function (line) { return line.trim(); })
-      .filter(Boolean)
-      .map(function (line, idx) { return (idx + 1) + '. ' + line; })
-      .join('\n');
-  }
-
   function renderResults(data, keyword) {
     if (!data || !data.results || data.results.length === 0) {
       output.innerHTML =
         '<div class="empty"><div class="big">🔍</div>' +
         '검색 결과가 없습니다.<br>다른 검색어로 다시 시도해 보세요.<br>' +
-        '<span style="font-size:0.8rem">No matching session minutes found.</span></div>';
+        '<span style="font-size:0.8rem">No matching documents found.</span></div>';
       return;
     }
 
-    let html = '<p class="result-count">총 ' + data.results.length + '건의 당회록을 찾았습니다.</p>';
+    let html = '<p class="result-count">총 ' + data.results.length + '건의 문서를 찾았습니다.</p>';
 
     data.results.forEach(function (item) {
-      const title = (item.연도 ? item.연도 + '년 ' : '') + (item.월 ? item.월 + '월 ' : '') + (item.회의종류 || '당회 회의록');
+      const title = (item.연도 ? item.연도 + '년 ' : '') + (item.월 ? item.월 + '월 ' : '') + (item.회의종류 || item.파일명 || '문서');
       html += '<div class="result-card">';
       html += '  <div class="card-head">';
       html += '    <div class="card-title">' + escapeHtml(title) + '</div>';
@@ -633,13 +266,8 @@
 
       if (item.참석자) html += '  <div class="card-meta">참석자: ' + escapeHtml(item.참석자) + '</div>';
 
-      if (item.논의사항) {
-        html += '  <div class="section-label">논의 사항</div>';
-        html += '  <div class="snippet">' + highlight(numberLines(item.논의사항), keyword) + '</div>';
-      }
-      if (item.결의사항) {
-        html += '  <div class="section-label">결의 사항</div>';
-        html += '  <div class="snippet">' + highlight(numberLines(item.결의사항), keyword) + '</div>';
+      if (item.스니펫) {
+        html += '  <div class="snippet">' + highlight(item.스니펫, keyword) + '</div>';
       }
 
       html += '  <div class="card-foot">';
@@ -657,16 +285,18 @@
       output.innerHTML = '<p class="status">검색어를 입력해 주세요.</p>';
       return;
     }
-    if (!apiConfigured()) {
-      output.innerHTML = '<p class="status">⚠️ 아직 API_URL이 설정되지 않았습니다.</p>';
-      return;
-    }
 
     btn.disabled = true;
     output.innerHTML = '<p class="status">검색 중입니다…</p>';
 
-    jsonpRequest(API_URL, { action: 'search', q: keyword })
-      .then(function (data) { renderResults(data, keyword); })
+    jsonpRequest(API_URL, { q: keyword })
+      .then(function (data) {
+        if (data && data.ok === false) {
+          output.innerHTML = '<p class="status">오류가 발생했습니다: ' + escapeHtml(data.error) + '</p>';
+          return;
+        }
+        renderResults(data, keyword);
+      })
       .catch(function (err) {
         output.innerHTML = '<p class="status">오류가 발생했습니다: ' + escapeHtml(err.message) + '</p>';
       })
@@ -674,7 +304,9 @@
   }
 
   btn.addEventListener('click', runSearch);
-  input.addEventListener('keydown', function (e) { if (e.key === 'Enter') runSearch(); });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') runSearch();
+  });
 </script>
 
 </body>
