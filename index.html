@@ -121,8 +121,8 @@
     gap: 12px;
     margin-bottom: 16px;
   }
-  .form-row.row-3{ grid-template-columns: 1fr 1fr 4fr; }
-  .form-row.row-4{ grid-template-columns: 1fr 1fr 1fr 6fr; }
+  .form-row.row-6{ grid-template-columns: 1fr 1fr 1fr 2fr 1.5fr 1.5fr; }
+  .form-row.row-pa{ grid-template-columns: 1fr 3fr; }
 
   .section-title{
     margin: 26px 0 10px;
@@ -315,10 +315,10 @@
   @media (max-width: 560px){
     header h1{ font-size: 1.25rem; }
     .form-grid{ grid-template-columns: 1fr; }
-    .form-row.row-3,
-    .form-row.row-4{ grid-template-columns: 1fr 1fr; }
-    .form-row.row-3 .field:last-child,
-    .form-row.row-4 .field:last-child{ grid-column: 1 / -1; }
+    .form-row.row-6{ grid-template-columns: 1fr 1fr; }
+    .form-row.row-6 .field:nth-child(5),
+    .form-row.row-6 .field:nth-child(6){ grid-column: span 1; }
+    .form-row.row-pa{ grid-template-columns: 1fr; }
     .search-box{ flex-direction: column; }
     .search-box button{ width: 100%; }
     .btn-row{ flex-direction: column; }
@@ -342,22 +342,23 @@
   <!-- ============ 작성 탭 ============ -->
   <section id="panel-write" class="panel active">
     <div class="card">
-      <div class="form-row row-3">
+      <div class="form-row row-6">
         <div class="field">
-          <label>연도</label>
+          <label>Year</label>
           <input type="text" id="f-year" placeholder="2026">
         </div>
         <div class="field">
-          <label>월</label>
+          <label>Month</label>
           <input type="text" id="f-month" placeholder="4">
         </div>
         <div class="field">
-          <label>일시</label>
-          <input type="text" id="f-datetime" placeholder="2026년 04월 11일 6:15 AM - 7:50 AM">
+          <label>Day</label>
+          <input type="text" id="f-day" placeholder="11">
         </div>
-      </div>
-
-      <div class="form-row row-4">
+        <div class="field">
+          <label>Meeting Time</label>
+          <input type="text" id="f-meeting-time" placeholder="6:15 AM - 7:50 AM">
+        </div>
         <div class="field">
           <label>장소</label>
           <input type="text" id="f-location" placeholder="회의실" value="회의실">
@@ -369,6 +370,9 @@
             <option value="임시 당회">임시 당회</option>
           </select>
         </div>
+      </div>
+
+      <div class="form-row row-pa">
         <div class="field">
           <label>기도자</label>
           <input type="text" id="f-prayer" placeholder="예: 윤자명 장로">
@@ -376,6 +380,17 @@
         <div class="field">
           <label>참석자</label>
           <input type="text" id="f-attendees" placeholder="예: 김윤민, 윤자명, 이윤종">
+        </div>
+      </div>
+
+      <div class="form-row row-pa">
+        <div class="field">
+          <label>이전 당회록</label>
+          <input type="text" id="f-prior-minutes" placeholder="2026년 3월 당회록.">
+        </div>
+        <div class="field">
+          <label>이전 재정보고</label>
+          <input type="text" id="f-prior-finance" placeholder="2026년 3월 재정보고">
         </div>
       </div>
 
@@ -501,22 +516,38 @@
   const saveStatus = document.getElementById('saveStatus');
 
   saveBtn.addEventListener('click', function () {
+    const year = document.getElementById('f-year').value.trim();
+    const month = document.getElementById('f-month').value.trim();
+    const day = document.getElementById('f-day').value.trim();
+    const meetingTime = document.getElementById('f-meeting-time').value.trim();
+
+    // Year/Month/Day/Meeting Time을 하나의 일시 문자열로 결합
+    // 예: 2026년 04월 11일 6:15 AM - 7:50 AM
+    let datetime = '';
+    if (year) datetime += year + '년 ';
+    if (month) datetime += month + '월 ';
+    if (day) datetime += day + '일 ';
+    datetime += meetingTime;
+    datetime = datetime.trim();
+
     const payload = {
-      연도: document.getElementById('f-year').value.trim(),
-      월: document.getElementById('f-month').value.trim(),
-      일시: document.getElementById('f-datetime').value.trim(),
+      연도: year,
+      월: month,
+      일시: datetime,
       장소: document.getElementById('f-location').value.trim(),
       회의종류: document.getElementById('f-meeting-type').value,
       기도자: document.getElementById('f-prayer').value.trim(),
       참석자: document.getElementById('f-attendees').value.trim(),
+      이전당회록: document.getElementById('f-prior-minutes').value.trim(),
+      이전재정보고: document.getElementById('f-prior-finance').value.trim(),
       논의사항: collectLines('discussion-text'),
       결의사항: collectLines('resolution-text'),
       서기: document.getElementById('f-secretary').value.trim(),
       당회장: document.getElementById('f-moderator').value.trim()
     };
 
-    if (!payload.연도 || !payload.월 || !payload.일시) {
-      saveStatus.innerHTML = '<div class="save-status err">연도, 월, 일시는 반드시 입력해 주세요.</div>';
+    if (!year || !month || !day) {
+      saveStatus.innerHTML = '<div class="save-status err">Year, Month, Day는 반드시 입력해 주세요.</div>';
       return;
     }
     if (!apiConfigured()) {
