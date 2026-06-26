@@ -491,8 +491,19 @@
   }
 
   function apiConfigured() {
-    return API_URL.indexOf('https://script.google.com/macros/s/AKfycbw1nXeagpzd16gBJJCBsD1RnfdwfCdO6j7BrcGPZys--Xu7spSdyn6w6tS0uvuffJPp/exec') === -1;
+    return API_URL.indexOf('PUT_APPS_SCRIPT_WEB_APP_URL_HERE') === -1;
   }
+
+  // ====================== 작성 폼: 기본값 채우기 ======================
+  // Year/Month/Day는 오늘 날짜로, Meeting Time은 기본 시간으로 미리 채워두고
+  // 필요하면 나중에 직접 수정할 수 있게 한다.
+  (function fillDefaultDate() {
+    const today = new Date();
+    document.getElementById('f-year').value = today.getFullYear();
+    document.getElementById('f-month').value = (today.getMonth() + 1);
+    document.getElementById('f-day').value = today.getDate();
+    document.getElementById('f-meeting-time').value = '6:15 AM - 8:30 AM';
+  })();
 
   // ====================== 작성 폼: 자동 확장 입력창 ======================
   function autoResize(textarea) {
