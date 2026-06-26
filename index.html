@@ -107,12 +107,22 @@
     outline: none;
     background:#fff;
     font-family: inherit;
+    width: 100%;
   }
   .field input[type="text"]:focus,
   .field select:focus{
     border-color: var(--navy);
     box-shadow: 0 0 0 3px rgba(15,42,74,0.10);
   }
+
+  /* 연도/월/일시, 장소/회의종류/기도자/참석자: 앞쪽 칸들은 좁게, 마지막 칸이 나머지를 채움 */
+  .form-row{
+    display:grid;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .form-row.row-3{ grid-template-columns: 1fr 1fr 4fr; }
+  .form-row.row-4{ grid-template-columns: 1fr 1fr 1fr 6fr; }
 
   .section-title{
     margin: 26px 0 10px;
@@ -123,43 +133,25 @@
     padding-bottom: 6px;
   }
 
-  .item-row{
-    display:flex;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-  .item-row input[type="text"]{
-    flex:1;
-    padding: 10px 12px;
-    font-size: 0.9rem;
+  .auto-textarea{
+    display:block;
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+    padding: 11px 12px;
+    font-size: 0.92rem;
+    line-height: 1.6;
     border: 1.5px solid var(--line);
     border-radius: 6px;
+    outline: none;
+    background:#fff;
     font-family: inherit;
+    min-height: 44px;
   }
-  .item-row .remove-btn{
-    flex-shrink:0;
-    width: 36px;
-    border: 1.5px solid var(--line);
-    background: #fff;
-    color: var(--danger);
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
+  .auto-textarea:focus{
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(15,42,74,0.10);
   }
-  .item-row .remove-btn:hover{ background:#fbeceb; }
-
-  .add-item-btn{
-    background: none;
-    border: 1.5px dashed var(--navy);
-    color: var(--navy);
-    border-radius: 6px;
-    padding: 8px 14px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .add-item-btn:hover{ background: var(--gold-soft); }
 
   .btn-row{
     display:flex;
@@ -323,6 +315,10 @@
   @media (max-width: 560px){
     header h1{ font-size: 1.25rem; }
     .form-grid{ grid-template-columns: 1fr; }
+    .form-row.row-3,
+    .form-row.row-4{ grid-template-columns: 1fr 1fr; }
+    .form-row.row-3 .field:last-child,
+    .form-row.row-4 .field:last-child{ grid-column: 1 / -1; }
     .search-box{ flex-direction: column; }
     .search-box button{ width: 100%; }
     .btn-row{ flex-direction: column; }
@@ -346,7 +342,7 @@
   <!-- ============ 작성 탭 ============ -->
   <section id="panel-write" class="panel active">
     <div class="card">
-      <div class="form-grid">
+      <div class="form-row row-3">
         <div class="field">
           <label>연도</label>
           <input type="text" id="f-year" placeholder="2026">
@@ -355,12 +351,13 @@
           <label>월</label>
           <input type="text" id="f-month" placeholder="4">
         </div>
-
-        <div class="field full">
+        <div class="field">
           <label>일시</label>
           <input type="text" id="f-datetime" placeholder="2026년 04월 11일 6:15 AM - 7:50 AM">
         </div>
+      </div>
 
+      <div class="form-row row-4">
         <div class="field">
           <label>장소</label>
           <input type="text" id="f-location" placeholder="회의실" value="회의실">
@@ -372,7 +369,6 @@
             <option value="임시 당회">임시 당회</option>
           </select>
         </div>
-
         <div class="field">
           <label>기도자</label>
           <input type="text" id="f-prayer" placeholder="예: 윤자명 장로">
@@ -384,12 +380,12 @@
       </div>
 
       <div class="section-title">논의 사항</div>
-      <div id="discussion-list"></div>
-      <button type="button" class="add-item-btn" data-target="discussion-list">+ 논의 사항 추가</button>
+      <textarea class="auto-textarea" id="discussion-text" rows="1"
+        placeholder="한 줄에 한 항목씩 입력하세요. Enter를 누르면 다음 항목으로 줄이 늘어납니다."></textarea>
 
       <div class="section-title">결의 사항</div>
-      <div id="resolution-list"></div>
-      <button type="button" class="add-item-btn" data-target="resolution-list">+ 결의 사항 추가</button>
+      <textarea class="auto-textarea" id="resolution-text" rows="1"
+        placeholder="한 줄에 한 항목씩 입력하세요. Enter를 누르면 다음 항목으로 줄이 늘어납니다."></textarea>
 
       <div class="form-grid" style="margin-top:24px;">
         <div class="field">
@@ -430,7 +426,7 @@
 <script>
   // ====================== 설정 ======================
   // Apps Script 웹 앱 배포 후 나오는 URL을 여기에 붙여넣으세요.
-  const API_URL = 'https://script.google.com/macros/s/AKfycbw1nXeagpzd16gBJJCBsD1RnfdwfCdO6j7BrcGPZys--Xu7spSdyn6w6tS0uvuffJPp/exec';
+  const API_URL = 'PUT_APPS_SCRIPT_WEB_APP_URL_HERE';
 
   // ====================== 탭 전환 ======================
   const tabBtns = document.querySelectorAll('.tab-btn');
@@ -483,38 +479,21 @@
     return API_URL.indexOf('PUT_APPS_SCRIPT_WEB_APP_URL_HERE') === -1;
   }
 
-  // ====================== 작성 폼: 동적 항목 추가/삭제 ======================
-  function addItemRow(containerId) {
-    const container = document.getElementById(containerId);
-    const row = document.createElement('div');
-    row.className = 'item-row';
-    row.innerHTML =
-      '<input type="text" placeholder="내용을 입력하세요">' +
-      '<button type="button" class="remove-btn" title="삭제">✕</button>';
-    row.querySelector('.remove-btn').addEventListener('click', function () {
-      row.remove();
-    });
-    container.appendChild(row);
-    row.querySelector('input').focus();
+  // ====================== 작성 폼: 자동 확장 입력창 ======================
+  function autoResize(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
   }
 
-  document.querySelectorAll('.add-item-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () { addItemRow(btn.dataset.target); });
+  const autoTextareas = document.querySelectorAll('.auto-textarea');
+  autoTextareas.forEach(function (ta) {
+    autoResize(ta);
+    ta.addEventListener('input', function () { autoResize(ta); });
   });
 
-  // 시작 시 기본 1줄씩 추가
-  addItemRow('discussion-list');
-  addItemRow('resolution-list');
-
-  function collectItems(containerId) {
-    const container = document.getElementById(containerId);
-    const inputs = container.querySelectorAll('input[type="text"]');
-    const items = [];
-    inputs.forEach(function (inp) {
-      const v = inp.value.trim();
-      if (v) items.push(v);
-    });
-    return items;
+  function collectLines(textareaId) {
+    const value = document.getElementById(textareaId).value;
+    return value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
   }
 
   // ====================== 저장 ======================
@@ -530,8 +509,8 @@
       회의종류: document.getElementById('f-meeting-type').value,
       기도자: document.getElementById('f-prayer').value.trim(),
       참석자: document.getElementById('f-attendees').value.trim(),
-      논의사항: collectItems('discussion-list'),
-      결의사항: collectItems('resolution-list'),
+      논의사항: collectLines('discussion-text'),
+      결의사항: collectLines('resolution-text'),
       서기: document.getElementById('f-secretary').value.trim(),
       당회장: document.getElementById('f-moderator').value.trim()
     };
