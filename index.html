@@ -633,11 +633,11 @@
 
       if (item.참석자) html += '  <div class="card-meta">참석자: ' + escapeHtml(item.참석자) + '</div>';
 
-      if (item.논의사항 && item.논의사항.toLowerCase().indexOf(keyword.toLowerCase()) !== -1) {
+      if (item.논의사항) {
         html += '  <div class="section-label">논의 사항</div>';
         html += '  <div class="snippet">' + highlight(numberLines(item.논의사항), keyword) + '</div>';
       }
-      if (item.결의사항 && item.결의사항.toLowerCase().indexOf(keyword.toLowerCase()) !== -1) {
+      if (item.결의사항) {
         html += '  <div class="section-label">결의 사항</div>';
         html += '  <div class="snippet">' + highlight(numberLines(item.결의사항), keyword) + '</div>';
       }
