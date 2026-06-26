@@ -598,6 +598,17 @@
     return escaped.replace(re, '<mark>$1</mark>');
   }
 
+  // 저장된 내용은 항목별로 줄바꿈만 되어 있고 번호가 없으므로,
+  // 화면에 보여줄 때 줄마다 "1. ", "2. " 번호를 붙여서 표시한다.
+  function numberLines(text) {
+    return String(text || '')
+      .split('\n')
+      .map(function (line) { return line.trim(); })
+      .filter(Boolean)
+      .map(function (line, idx) { return (idx + 1) + '. ' + line; })
+      .join('\n');
+  }
+
   function renderResults(data, keyword) {
     if (!data || !data.results || data.results.length === 0) {
       output.innerHTML =
@@ -624,11 +635,11 @@
 
       if (item.논의사항 && item.논의사항.toLowerCase().indexOf(keyword.toLowerCase()) !== -1) {
         html += '  <div class="section-label">논의 사항</div>';
-        html += '  <div class="snippet">' + highlight(item.논의사항, keyword) + '</div>';
+        html += '  <div class="snippet">' + highlight(numberLines(item.논의사항), keyword) + '</div>';
       }
       if (item.결의사항 && item.결의사항.toLowerCase().indexOf(keyword.toLowerCase()) !== -1) {
         html += '  <div class="section-label">결의 사항</div>';
-        html += '  <div class="snippet">' + highlight(item.결의사항, keyword) + '</div>';
+        html += '  <div class="snippet">' + highlight(numberLines(item.결의사항), keyword) + '</div>';
       }
 
       html += '  <div class="card-foot">';
