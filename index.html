@@ -48,6 +48,26 @@
     padding: 28px 18px 60px;
   }
 
+  .search-sticky{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--paper);
+    padding-top: 14px;
+    padding-bottom: 10px;
+    margin: -14px 0 0;
+  }
+  .search-sticky::after{
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 1px;
+    background: var(--line);
+    opacity: 0;
+    transition: opacity .2s ease;
+  }
+  .search-sticky.is-stuck::after{ opacity: 1; }
+
   .search-box{
     display:flex;
     gap:10px;
@@ -81,6 +101,42 @@
   }
   .search-box button:hover{ background: var(--navy-deep); }
   .search-box button:disabled{ opacity:.6; cursor: default; }
+
+  .scroll-fab-group{
+    position: fixed;
+    right: 18px;
+    bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 60;
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .scroll-fab-group.visible{
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .scroll-fab{
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(8,26,48,0.28);
+    transition: background .15s ease, transform .12s ease;
+  }
+  .scroll-fab:hover{ background: var(--navy-deep); transform: translateY(-1px); }
+  .scroll-fab:active{ transform: translateY(0); }
+  .scroll-fab svg{ width: 20px; height: 20px; }
 
   .hint{
     font-size: 0.8rem;
@@ -196,6 +252,8 @@
     header h1{ font-size: 1.25rem; }
     .search-box{ flex-direction: column; }
     .search-box button{ width: 100%; }
+    .scroll-fab-group{ right: 12px; bottom: 18px; }
+    .scroll-fab{ width: 40px; height: 40px; }
   }
 </style>
 </head>
@@ -207,14 +265,29 @@
 </header>
 
 <main>
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="검색어 입력 (예: 비빔밥, CDARS, 선교회 …)" autocomplete="off">
-    <button id="searchBtn">검색 Search</button>
+  <div class="search-sticky" id="searchSticky">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="검색어 입력 (예: 비빔밥, CDARS, 선교회 …)" autocomplete="off">
+      <button id="searchBtn">검색 Search</button>
+    </div>
+    <p class="hint">폴더 안의 모든 문서에서 제목과 본문 내용을 검색합니다. (Searches the title and full text of every document in the folder.)</p>
   </div>
-  <p class="hint">폴더 안의 모든 문서에서 제목과 본문 내용을 검색합니다. (Searches the title and full text of every document in the folder.)</p>
 
   <div id="output"></div>
 </main>
+
+<div class="scroll-fab-group" id="scrollFabGroup">
+  <button class="scroll-fab" id="scrollDownBtn" title="맨 아래로" aria-label="맨 아래로 이동">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4v16M5 13l7 7 7-7"/>
+    </svg>
+  </button>
+  <button class="scroll-fab" id="scrollTopBtn" title="맨 위로 (원위치)" aria-label="맨 위로 이동">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 20V4M5 11l7-7 7 7"/>
+    </svg>
+  </button>
+</div>
 
 <footer>
   Chicago Covenant Presbyterian Church &middot; chicagocovenant.org
@@ -346,6 +419,45 @@
   input.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') runSearch();
   });
+
+  // ====================== 스크롤 보조 버튼 (맨 아래로 / 맨 위로) ======================
+  const scrollFabGroup = document.getElementById('scrollFabGroup');
+  const scrollDownBtn = document.getElementById('scrollDownBtn');
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+  const searchSticky = document.getElementById('searchSticky');
+
+  function updateScrollUI() {
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+    const pageHeight = document.documentElement.scrollHeight;
+    const viewportHeight = window.innerHeight;
+
+    // 페이지가 한 화면보다 충분히 길 때만 버튼을 보여준다
+    const isScrollable = pageHeight > viewportHeight + 200;
+    scrollFabGroup.classList.toggle('visible', isScrollable);
+
+    // 맨 아래 근처에서는 "아래로" 버튼을 흐리게/비활성처럼 보이지 않게 그냥 둠
+    // (대신 맨 위 도달 시 "위로" 버튼 숨겨도 되지만, 누르면 그냥 그대로이므로 유지)
+
+    // 검색창이 화면 상단에 붙었는지(고정됐는지) 판단해 옅은 경계선을 보여줌
+    searchSticky.classList.toggle('is-stuck', scrollY > 4);
+  }
+
+  scrollDownBtn.addEventListener('click', function () {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+  });
+
+  scrollTopBtn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  window.addEventListener('scroll', updateScrollUI, { passive: true });
+  window.addEventListener('resize', updateScrollUI);
+
+  // 검색 결과가 새로 그려질 때마다(페이지 높이가 바뀌므로) 버튼 표시 상태를 갱신
+  const scrollUIObserver = new MutationObserver(updateScrollUI);
+  scrollUIObserver.observe(output, { childList: true, subtree: true });
+
+  updateScrollUI();
 </script>
 
 </body>
